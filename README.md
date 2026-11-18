@@ -22,7 +22,6 @@ teams.csv
 competition_team_player_mapping.csv
 ```
 
-Do not commit the data pack, processed delivery files, player-level outputs, generated dashboards or logs. The `.gitignore` excludes these by default. Confirm you have permission before publishing any derived output from competition data.
 
 ## Setup
 
