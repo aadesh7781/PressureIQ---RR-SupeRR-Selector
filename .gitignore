@@ -6,7 +6,6 @@ logs/*.log
 data/raw/*.csv
 data/interim/*
 data/processed/*
-reports/generated/*
 outputs/
 work/
 !data/interim/.gitkeep
