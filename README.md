@@ -1,6 +1,6 @@
 # PressureIQ
 
-PressureIQ is a reproducible cricket analytics project for studying player performance in high-pressure T20 match states. It builds separate batter and bowler rankings, publishes the component metrics and sample sizes, and produces a separate Rajasthan Royals 2026 performance review.
+PressureIQ is a cricket analytics project for studying player performance in high-pressure T20 match states. It builds separate batter and bowler rankings, publishes the component metrics and sample sizes, and produces a separate Rajasthan Royals 2026 performance review.
 
 ## Project scope
 
@@ -67,14 +67,29 @@ To run one stage, use `python scripts/<script_name>.py` from the project folder.
 | Assemble methodology report | `build_methodology_report.py` |
 | Build the dashboard | `build_dashboard.py` |
 
-## How the metrics work
+## How pressure is calculated
 
-The current scoring workflow compares a player's pressure-state results with their own non-pressure results in the same format, innings type and phase. It calculates:
+Pressure is assigned to a **delivery state before the ball is bowled**. The project groups comparable states by format (IPL or T20I), innings phase (powerplay, middle or death), and a 12-ball remaining band. It calculates two percentile components from that group:
+
+- **Demand stress (D):** in a chase, the percentile rank of required run rate; in the first innings, the reverse percentile rank of current run rate, so a lower scoring rate means more stress.
+- **Resource stress (R):** the percentile rank of wickets already lost, so losing more wickets means more stress.
+
+The candidate pressure score is:
+
+```text
+Pressure score = w × D + (1 − w) × R
+```
+
+The current default uses equal weights (`w = 0.50`) and labels a state high pressure at or above the 75th percentile (`0.75`). The workflow checks alternative demand weights of 0.25, 0.50 and 0.75, and cutoffs of 0.70, 0.75 and 0.80. A cross-validated first-innings par/expected-score approach is also compared with current run rate. These are project analysis settings, not a competition-prescribed rule or a direct measure of psychological pressure. Ranking sensitivity reports show how much player lists change under alternatives.
+
+## How player metrics work
+
+For each role, the scoring workflow compares a player's pressure-state results with their own non-pressure results in the same format, innings type and phase. It calculates:
 
 - **Batters:** runs-per-100-ball lift and dismissals avoided per 100 balls.
 - **Bowlers:** runs saved per over and wicket lift per 24 legal balls.
 
-The pipeline smooths small samples toward population baselines, combines standardized components and applies reliability adjustments. Current threshold, weight, minimum-sample and prior settings remain analysis choices in the code/configuration and are evaluated through sensitivity reports. The methodology report explains the settings used for a particular run.
+The pipeline smooths small samples toward population baselines, standardizes the components across eligible players, combines them with equal component weights, and applies exposure and match-count reliability adjustments. It checks alternative pressure definitions, weights, sample rules and ranking stability. These choices remain project methodology settings, not official competition rules. The generated methodology report records the settings used in a run.
 
 ## Data and interpretation limits
 
@@ -100,4 +115,4 @@ requirements.txt          Python dependencies
 
 ## License and competition data
 
-No open-source license is included. Add a license only after choosing terms that fit the code and competition restrictions. The competition data pack and its derived outputs may have separate restrictions; this repository does not grant permission to redistribute them.
+No open-source license is included.

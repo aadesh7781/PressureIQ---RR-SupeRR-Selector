@@ -1,6 +1,7 @@
 .venv/
 __pycache__/
 *.py[cod]
+*.pptx
 logs/*.log
 data/raw/*.csv
 data/interim/*
