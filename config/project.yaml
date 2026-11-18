@@ -1,0 +1,79 @@
+project:
+  name: "SupeRR Selector Season 2 / PressureIQ"
+  timezone: "Asia/Kolkata"
+  target_team: "Rajasthan Royals"
+  season_start_year: 2022
+paths:
+  raw_data: "data/raw"
+  interim_data: "data/interim"
+  processed_data: "data/processed"
+  reports: "reports"
+  logs: "logs"
+audits:
+  expected_files:
+    - "ball_by_ball.csv"
+    - "matches.csv"
+    - "playing_eleven.csv"
+    - "competitions.csv"
+    - "teams.csv"
+    - "competition_team_player_mapping.csv"
+analysis:
+  pressure_definition: "TBD after data and competition-rule review"
+  minimum_sample_policy: "TBD; report raw and reliability-adjusted values"
+  ranking_count: 10
+  measured_dew_field: null
+  dew_proxy_fields: []
+  include_rr_2026_team_review: true
+  rr_2026_review_sections:
+    - "Match-by-match wins and losses"
+    - "Batting and bowling phase weaknesses"
+    - "Evidence-based player role archetypes to target"
+    - "Data limitations and uncertainty"
+eligibility:
+  start_date: "2022-01-01"
+  include_t20_internationals: true
+  include_ipl: true
+  exclude_other_t20_competitions: true
+  player_pool: "Players appearing in eligible supplied competition data; verify final dropdown availability before submission"
+rankings:
+  separate_batter_and_bowler_lists: true
+  rank_order: "descending rating; rank 1 is highest-rated"
+  unique_players_within_each_list: true
+  cross_list_overlap_allowed_by_brief: true
+delivery_accounting:
+  source_runs_field: "runs (provisional striker-run interpretation; verify against score totals)"
+  extras_fields: ["extras1_runs", "extras_2_runs"]
+  known_illegal_extras_types: ["wide", "Overstep"]
+  known_legal_extras_types: ["byes", "legbyes"]
+  unresolved_extras_types: ["other", "Penalty"]
+  reconciliation_status: "provisional; independent innings score totals are absent"
+innings_state:
+  standard_t20_ball_limit: 120
+  revised_overs_unit: "balls (inferred from supplied values, all multiples of six)"
+  state_timing: "pre-delivery"
+  include_standard_innings: [1, 2]
+  pressure_thresholds: "TBD after state coverage and baseline analysis; test sensitivity"
+pressure_candidates:
+  grouping: ["competition_type", "innings_phase", "12_ball_remaining_band"]
+  demand_weights_to_compare: [0.25, 0.5, 0.75]
+  resource_weights: "1 - demand weight"
+  high_pressure_percentiles_to_compare: [0.7, 0.75, 0.8]
+  provisional_starting_point: "equal demand/resource weights, 75th percentile; not locked"
+scoring_prototype:
+  component_weights: "equal z-weight for pressure scoring lift and survival/wicket lift"
+  batter_prior_balls: 60
+  bowler_prior_legal_balls: 48
+  batter_min_pressure_and_baseline_balls: 60
+  batter_min_total_valid_balls: 250
+  bowler_min_pressure_and_baseline_legal_balls: 48
+  min_pressure_matches: 5
+  reliability_match_constant: 4
+  status: "exploratory; working batter screen requires 250 total valid balls plus current pressure/baseline/match minimums; test sensitivity before final rankings"
+methodology_report:
+  required_sections:
+    - "Pressure definition and rationale"
+    - "Batting and bowling metrics, baselines, and scoring logic"
+    - "Fair comparisons: sample size, eligibility, context, IPL and T20I"
+    - "Evidence supporting each top-10 ranking and ordering"
+    - "Reliability checks, uncertainty, and limitations"
+    - "Separate Rajasthan Royals 2026 performance review and player-role needs"
